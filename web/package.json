@@ -1,0 +1,33 @@
+{
+  "name": "lj-boilerplate",
+  "version": "1.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --emptyOutDir",
+    "preview": "vite preview --port 5050"
+  },
+  "dependencies": {
+    "@bhplugin/vue3-datatable": "^2.0.2",
+    "@headlessui/vue": "^1.7.13",
+    "@heroicons/vue": "^2.0.17",
+    "@tailwindcss/typography": "^0.5.9",
+    "autoprefixer": "^10.4.14",
+    "axios": "^1.4.0",
+    "chart.js": "^4.4.9",
+    "pinia": "^2.1.6",
+    "vue": "^3.2.45",
+    "vue-cryptojs": "^2.4.3",
+    "vue-router": "^4.2.4",
+    "vue3-easy-data-table": "^1.5.47"
+  },
+  "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.3",
+    "@types/crypto-js": "^4.1.1",
+    "@vitejs/plugin-vue": "^2.0.1",
+    "sass": "^1.87.0",
+    "tailwindcss": "^3.3.1",
+    "tailwindcss-animate": "^1.0.5",
+    "vite": "^2.7.7"
+  }
+}
