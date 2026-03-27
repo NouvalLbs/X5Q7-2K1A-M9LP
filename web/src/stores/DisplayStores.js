@@ -1,16 +1,24 @@
 import { defineStore } from 'pinia';
-import { NUIHandler } from '../services/NUIHandler';
+import { sendToServer } from '@/services/CefHandler';
 
-export const DisplayStores = defineStore({
-  id: 'displaystores',
-
-  state: () => {
-    return {
-      VisibleMode: false
+export const useDisplayStore = defineStore('display', {
+  state: () => ({
+    Hud: {
+      ShowHealth: true,
+      ShowArmour: true,
+      ShowHunger: true,
+      ShowThirst: true,
+      ShowStress: true,
     }
-  },
-
+  }),
   actions: {
-    
-  }
-})
+    /*
+    setVisible(val) {
+      this.visible = val;
+    },
+    notifyReady() {
+      sendToServer('uiReady', {});
+    },
+    */
+  },
+});
