@@ -72,11 +72,13 @@
 </template>
 
 <script setup>
-import { useDisplayStore } from '@/stores/DisplayStores';
+import { DisplayStores } from '@/stores/DisplayStores';
+import { storeToRefs } from 'pinia'; // ← Import ini
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { Heart, Shield, Utensils, Droplet, Brain } from 'lucide-vue-next';
 
-const Display = useDisplayStore();
+const Display = DisplayStores();
+const { Hud } = storeToRefs(Display); // ← Destructure dengan storeToRefs
 
 const size = 56;
 const strokeWidth = 4;
@@ -107,11 +109,11 @@ const fuel = ref(68);
 
 const visibleHudItems = computed(() => {
     return [
-        { visible: Display.Hud.ShowHealth, icon: Heart, value: stats.value.health, color: '#ef4444' },
-        { visible: Display.Hud.ShowArmour, icon: Shield, value: stats.value.armor, color: '#06b6d4' },
-        { visible: Display.Hud.ShowHunger, icon: Utensils, value: stats.value.hunger, color: '#f59e0b' },
-        { visible: Display.Hud.ShowThirst, icon: Droplet, value: stats.value.hydration, color: '#3b82f6' },
-        { visible: Display.Hud.ShowStress, icon: Brain, value: stats.value.focus, color: '#a855f7' }
+        { visible: Hud.value.ShowHealth, icon: Heart, value: stats.value.health, color: '#ef4444' },
+        { visible: Hud.value.ShowArmour, icon: Shield, value: stats.value.armor, color: '#06b6d4' },
+        { visible: Hud.value.ShowHunger, icon: Utensils, value: stats.value.hunger, color: '#f59e0b' },
+        { visible: Hud.value.ShowThirst, icon: Droplet, value: stats.value.hydration, color: '#3b82f6' },
+        { visible: Hud.value.ShowStress, icon: Brain, value: stats.value.focus, color: '#a855f7' }
     ].filter(item => item.visible);
 });
 

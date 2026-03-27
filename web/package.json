@@ -10,7 +10,6 @@
     "@bhplugin/vue3-datatable": "^2.0.2",
     "@headlessui/vue": "^1.7.13",
     "@heroicons/vue": "^2.0.17",
-    "@lucide/vue": "^1.7.0",
     "@tailwindcss/typography": "^0.5.9",
     "autoprefixer": "^10.4.14",
     "axios": "^1.4.0",
