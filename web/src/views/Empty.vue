@@ -73,12 +73,12 @@
 
 <script setup>
 import { DisplayStores } from '@/stores/DisplayStores';
-import { storeToRefs } from 'pinia'; // ← Import ini
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { ref, computed } from 'vue';
 import { Heart, Shield, Utensils, Droplet, Brain } from 'lucide-vue-next';
 
 const Display = DisplayStores();
-const { Hud } = storeToRefs(Display); // ← Destructure dengan storeToRefs
+const { Hud } = storeToRefs(Display);
 
 const size = 56;
 const strokeWidth = 4;
@@ -97,13 +97,13 @@ const getOffset = (value) => {
     return perimeter - (value / 100) * perimeter;
 };
 
-const stats = ref({
+const stats = computed(() => ({
     health: Display.Hud.HealthValue,
     armor: Display.Hud.ArmourValue,
     hunger: Display.Hud.HungerValue,
     hydration: Display.Hud.ThirstValue,
     focus: Display.Hud.StressValue
-});
+}));
 
 const fuel = ref(68);
 
@@ -115,25 +115,6 @@ const visibleHudItems = computed(() => {
         { visible: Hud.value.ShowThirst, icon: Droplet, value: stats.value.hydration, color: '#3b82f6' },
         { visible: Hud.value.ShowStress, icon: Brain, value: stats.value.focus, color: '#a855f7' }
     ].filter(item => item.visible);
-});
-
-let interval;
-
-onMounted(() => {
-    interval = setInterval(() => {
-        stats.value = {
-            health: Math.max(0, Math.min(100, stats.value.health )),
-            armor: Math.max(0, Math.min(100, stats.value.armor )),
-            hunger: Math.max(0, Math.min(100, stats.value.hunger )),
-            hydration: Math.max(0, Math.min(100, stats.value.hydration )),
-            focus: Math.max(0, Math.min(100, stats.value.focus ))
-        };
-        fuel.value = Math.max(0, Math.min(100, fuel.value + (Math.random() - 0.5) * 5));
-    }, 2000);
-});
-
-onUnmounted(() => {
-    clearInterval(interval);
 });
 </script>
 

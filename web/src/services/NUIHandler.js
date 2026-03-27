@@ -35,37 +35,32 @@ export function RecieveNUIMessage() {
   const Display = DisplayStores();
 
   const handleEvent = (eventData) => {
-    /*
-      if (eventData.type === 'Indicator_Add') {
-        let parsed = JSON.parse(eventData.tempData);
-        Display.Indicator_Add(parsed);
-      }
-    */
+    const data = typeof eventData === 'string' ? JSON.parse(eventData) : eventData;
+    
+    if (data.e === 'updateHud') {
+      Display.UpdateHud(data.d);
+    }
+    
+    if (data.e === 'setHudVisible') {
+      Display.SetHudVisible(data.d.visible);
+    }
   };
 
-  window.addEventListener('message', (event) => {
-    const eventData = event.data;
-    handleEvent(eventData);
-  });
-
   if (window.cef) {
-    window.cef.on('message', (data) => {
-      try {
-        const parsed = typeof data === 'string' ? JSON.parse(data) : data;
-        handleEvent(parsed);
-      } catch (err) {
-        console.error('Failed to parse CEF message:', err);
-      }
+    window.cef.on('client_event', (data) => {
+      handleEvent(data);
+    });
+    
+    window.addEventListener('cef_event', (event) => {
+      handleEvent(event.detail);
     });
   }
 
-  window.EmitReady = () => {
-    NUIHandler.SendEventToServer('uiReady', {});
-  };
+  window.addEventListener('message', (event) => {
+    handleEvent(event.data);
+  });
 
   setTimeout(() => {
-    if (window.EmitReady) {
-      window.EmitReady();
-    }
+    NUIHandler.SendEventToServer('uiReady', {});
   }, 100);
 }
