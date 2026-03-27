@@ -1,5 +1,5 @@
 <template>
-    <div class="webview-container">
+    <div v-if="Display.HudVisible" class="webview-container">
         <div class="footer-container">
             <div v-if="Display.IsInVehicle" class="left-speedo-conatiner">
                 <div class="speedo-layer">

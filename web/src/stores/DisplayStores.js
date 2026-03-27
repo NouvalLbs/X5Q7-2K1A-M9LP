@@ -6,6 +6,7 @@ export const DisplayStores = defineStore({
 
   state: () => {
     return {
+      HudVisible: true,
       Hud: {
         ShowHealth: true,
         HealthValue: 50,
