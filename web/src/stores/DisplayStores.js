@@ -8,10 +8,22 @@ export const DisplayStores = defineStore({
     return {
       Hud: {
         ShowHealth: true,
+        HealthValue: 50,
+
         ShowArmour: true,
+        ArmourValue: 50,
+
         ShowHunger: true,
+        HungerValue: 50,
+
         ShowThirst: true,
+        ThirstValue: 50,
+
         ShowStress: true,
+        StressValue: 50,
+      },
+      Speedo: {
+        IsInVehicle: false,
       }
     }
   }

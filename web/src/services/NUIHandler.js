@@ -1,20 +1,24 @@
-import axios from 'axios';
 import { DisplayStores } from '../stores/DisplayStores';
 
 export class NUIHandler {
-  static async SendCallbackToClientLua(method, parameters) {
-      try {
-          const response = await axios.post(`https://${GetParentResourceName()}/${method}`, parameters);
-          const data     = response.data;
-
-          if (!data || !data.success) {
-              return false;
-          }
-
-          return data.data || {};
-      } catch(err) {
-          return false;
+  static SendEventToServer(eventName, payload = {}) {
+    try {
+      const data = {
+        e: eventName,
+        d: payload
+      };
+      
+      if (window.cef) {
+        window.cef.emit('client_event', JSON.stringify(data));
+      } else if (window.external) {
+        window.external.emit(JSON.stringify(data));
       }
+      
+      return true;
+    } catch (err) {
+      console.error('Failed to send event to server:', err);
+      return false;
+    }
   }
 }
 
@@ -30,58 +34,38 @@ export function CloseNUIHandler() {
 export function RecieveNUIMessage() {
   const Display = DisplayStores();
 
+  const handleEvent = (eventData) => {
+    /*
+      if (eventData.type === 'Indicator_Add') {
+        let parsed = JSON.parse(eventData.tempData);
+        Display.Indicator_Add(parsed);
+      }
+    */
+  };
+
   window.addEventListener('message', (event) => {
-    let eventData = event.data;
-
-    // Existing handlers
-    if (eventData.type === 'Indicator_Add') {
-      let parsed = JSON.parse(eventData.tempData);
-      Display.Indicator_Add(parsed);
-    }
-
-    if (eventData.type === 'Indicator_Edit') {
-      let parsed = JSON.parse(eventData.tempData);
-      Display.Indicator_Edit(parsed.IconId, parsed.NewLabel);
-    }
-
-    if (eventData.type === 'Indicator_Remove') {
-      Display.Indicator_Remove(eventData.IconId);
-    }
-
-    if (eventData.type === 'Indicator_Update') {
-      let parsed = JSON.parse(eventData.tempData);
-      Display.StoredPlayerInfo = parsed;
-    }
-
-    if (eventData.type === 'Indicator_VisibleMode') {
-      Display.VisibleMode = eventData.state;
-    }
-
-    if (eventData.type === 'Troll_ShowUI') {
-      Display.AntiTroll.enable = eventData.show;
-    }
-
-    if (eventData.type === 'Troll_UpdateUI') {
-      Display.AntiTroll.minleft = eventData.minleft;
-      Display.AntiTroll.description = eventData.description;
-    }
-
-    // Notification handlers
-    if (eventData.type === 'Notification_Add') {
-      let parsed = typeof eventData.tempData === 'string' ? JSON.parse(eventData.tempData) : eventData.tempData;
-      Display.Notification_Add(parsed);
-    }
-
-    if (eventData.type === 'Notification_Remove') {
-      Display.Notification_Remove(eventData.notificationId);
-    }
-
-    if (eventData.type === 'Notification_Clear') {
-      Display.Notification_Clear();
-    }
-
-    if (eventData.type === 'Notification_RemoveByType') {
-      Display.Notification_RemoveByType(eventData.notificationType);
-    }
+    const eventData = event.data;
+    handleEvent(eventData);
   });
+
+  if (window.cef) {
+    window.cef.on('message', (data) => {
+      try {
+        const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+        handleEvent(parsed);
+      } catch (err) {
+        console.error('Failed to parse CEF message:', err);
+      }
+    });
+  }
+
+  window.EmitReady = () => {
+    NUIHandler.SendEventToServer('uiReady', {});
+  };
+
+  setTimeout(() => {
+    if (window.EmitReady) {
+      window.EmitReady();
+    }
+  }, 100);
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="webview-container">
         <div class="footer-container">
-            <div class="left-speedo-conatiner">
+            <div v-if="Display.IsInVehicle" class="left-speedo-conatiner">
                 <div class="speedo-layer">
                     <div class="speedo-gear">
                         <div class="gear">3</div>
@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <div class="right-speedo-container">
+            <div v-if="Display.IsInVehicle" class="right-speedo-container">
                 <div class="speedo-layer">
                     <div class="fuel-info">
                         <img class="icon" src="/img/empty/gas.svg">
@@ -98,11 +98,11 @@ const getOffset = (value) => {
 };
 
 const stats = ref({
-    health: 75,
-    armor: 60,
-    hunger: 85,
-    hydration: 45,
-    focus: 90
+    health: Display.Hud.HealthValue,
+    armor: Display.Hud.ArmourValue,
+    hunger: Display.Hud.HungerValue,
+    hydration: Display.Hud.ThirstValue,
+    focus: Display.Hud.StressValue
 });
 
 const fuel = ref(68);
@@ -122,11 +122,11 @@ let interval;
 onMounted(() => {
     interval = setInterval(() => {
         stats.value = {
-            health: Math.max(0, Math.min(100, stats.value.health + (Math.random() - 0.5) * 10)),
-            armor: Math.max(0, Math.min(100, stats.value.armor + (Math.random() - 0.5) * 10)),
-            hunger: Math.max(0, Math.min(100, stats.value.hunger + (Math.random() - 0.5) * 10)),
-            hydration: Math.max(0, Math.min(100, stats.value.hydration + (Math.random() - 0.5) * 10)),
-            focus: Math.max(0, Math.min(100, stats.value.focus + (Math.random() - 0.5) * 10))
+            health: Math.max(0, Math.min(100, stats.value.health )),
+            armor: Math.max(0, Math.min(100, stats.value.armor )),
+            hunger: Math.max(0, Math.min(100, stats.value.hunger )),
+            hydration: Math.max(0, Math.min(100, stats.value.hydration )),
+            focus: Math.max(0, Math.min(100, stats.value.focus ))
         };
         fuel.value = Math.max(0, Math.min(100, fuel.value + (Math.random() - 0.5) * 5));
     }, 2000);
